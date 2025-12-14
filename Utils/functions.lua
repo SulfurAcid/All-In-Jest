@@ -1874,6 +1874,77 @@ function All_in_Jest.aij_refresh_boss_blind()
     end
 end
 
+function All_in_Jest.get_random_joker_colours(colour)
+    if colour == 'skintone' then
+        local seed = pseudoseed('randomjoker')
+        local raritys = {common = 0.7, uncommon = 0.2, rare = 0.07, very_rare = 0.03}
+        local rarity = "common"
+        for k, v in pairs(raritys) do
+            if seed <= v then
+                rarity = k
+            end
+        end
+        local colour_palettes = {
+            common = {
+                jimbo = {HEX('ffffff'), HEX('dcdcdc'), HEX('c0c0c0')},
+            }, 
+            uncommon = {
+                greedy_joker = {HEX('fde9d6'), HEX('f8cbaa'), HEX('f28a3c')},
+                lusty_joker = {HEX('fde8e8'), HEX('fdd3d5'), HEX('ff6368')},
+                wrathful_joker = {HEX('f9f7ff'), HEX('dddafb'), HEX('7a73bb')},
+                gluttonous_joker = {HEX('e8ffff'), HEX('cdf8f5'), HEX('449d95')},
+                steel = {HEX('f4f7fc'), HEX('e5edf9'), HEX('c2cddf')},
+            },
+            rare = {
+                marble = {HEX('f9f3e6'), HEX('e8dfc4'), HEX('cbcdb2')},
+                tarot = {HEX('cbcdb2'), HEX('d9b672'), HEX('bb9d64')},
+                astronomer = {HEX('dff5fc'), HEX('84c5d2'), HEX('5b9baa')},
+            },
+            very_rare = {
+                gold = {HEX('fdd897'), HEX('f1ba5b'), HEX('dfab55')},
+                blueprint = {HEX('abbdf8'), HEX('829cf4'), HEX('6484f7')},
+            }
+        }
+        local selected_palette = pseudorandom_element(colour_palettes[rarity], pseudoseed('randomjoker'))
+        return selected_palette
+    elseif 'clothes_and_makeup' then
+        local colours = {
+            HEX('fd5f55'), HEX('fda200'), HEX('009cfd'), HEX('55a383'), HEX('8dffd0'), HEX('7dc6f3'),
+            HEX('597a90'), HEX('83c4b4'), HEX('608d81'), HEX('d9dd61'), HEX('f66178'), HEX('e39571'),
+            HEX('ff7e5f'), HEX('71d0e4'), HEX('fde487'), HEX('eeeeee'), HEX('4f6367'), HEX('d5495e'),
+        }
+        local clothes_colour = {}
+        local makeup_colour = {}
+        for i = 1, 5 do
+            local ran_element = pseudorandom_element(colours, pseudoseed('randomjoker'..i))
+            for k, v in pairs(colours) do
+                if v == ran_element then
+                    v = nil
+                end
+            end
+            clothes_colour[#clothes_colour+1] = ran_element
+        end
+        for i = 6, 9 do
+            local ran_element = pseudorandom_element(colours, pseudoseed('randomjoker'..i))
+            for k, v in pairs(colours) do
+                if v == ran_element then
+                    v = nil
+                end
+            end
+            makeup_colour[#makeup_colour+1] = ran_element
+        end
+        local makeup1 = pseudoseed('randomjokert1')
+        local makeup2 = pseudoseed('randomjokert2')
+        if makeup1 <= 0.5 then
+            clothes_colour[1] = makeup_colour[1]
+        end
+        if makeup2 <= 0.5 then
+            clothes_colour[2] = makeup_colour[2]
+        end
+        return clothes_colour, makeup_colour
+    end
+end
+
 
 G.FUNCS.aij_hover_tag_branching = function(e)
     if not e.parent or not e.parent.states then return end
